@@ -10,6 +10,7 @@ class RandomPlayer():
         self.game = game
 
     def play(self, board):
+        self.game.clear_top_pygame()
         a = np.random.randint(self.game.getActionSize())
         valids = self.game.getValidMoves(board, 1)
         while valids[a] != 1:
@@ -22,6 +23,7 @@ class HumanConnect4Player():
         self.game = game
         self.color = constants.RED
     def play(self, board):
+
         valid_moves = self.game.getValidMoves(board, 1)
         print('\nMoves:', [i for (i, valid) in enumerate(valid_moves) if valid])
         flag = False
@@ -59,6 +61,8 @@ class OneStepLookaheadConnect4Player():
         self.verbose = verbose
 
     def play(self, board):
+        self.game.clear_top_pygame()
+
         valid_moves = self.game.getValidMoves(board, self.player_num)
         win_move_set = set()
         fallback_move_set = set()
@@ -96,10 +100,11 @@ class OneStepLookaheadConnect4Player():
 
 
 class MinimaxConnect4Player():
-    def __init__(self, game, verbose=True):
+    def __init__(self, game,depth, verbose=True):
         self.game = game
         self.player_num = 1
         self.verbose = verbose
+        self.depth = depth
 
     def evaluate_window(self, window, piece):
         score = 0
@@ -201,5 +206,7 @@ class MinimaxConnect4Player():
             return column, value
 
     def play(self, board):
-        s, t = self.minimax(board, 4, -math.inf, math.inf, True)
+        self.game.clear_top_pygame()
+
+        s, t = self.minimax(board, self.depth, -math.inf, math.inf, True)
         return s

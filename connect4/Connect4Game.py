@@ -97,7 +97,10 @@ class Connect4Game(Game):
                         pygame.draw.circle(self.screen, constants.YELLOW, (int(c*sqsz+sqsz/2), self.height_px-int(r*sqsz+sqsz/2)), self.RADIUS)
             pygame.display.update()
 
-
+    def clear_top_pygame(self):
+        pygame.draw.rect(self.screen, constants.BLACK, (0,0,self.width_px,constants.SQUARE_SIZE))
+        pygame.display.update()
+        
 def display(board):
     print(" -----------------------")
     print(' '.join(map(str, range(len(board[0])))))
