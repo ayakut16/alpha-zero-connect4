@@ -1,6 +1,7 @@
 import numpy as np
 from pytorch_classification.utils import Bar, AverageMeter
 import time
+from connect4.Connect4Constants import Connect4Constants as constants
 import pygame
 
 BLUE = (0,0,255)
@@ -63,8 +64,22 @@ class Arena():
             board, curPlayer = self.game.getNextState(board, curPlayer, action)
         if verbose:
             assert(self.display)
-            print("Game over: Turn ", str(it), "Result ", str(self.game.getGameEnded(board, 1)))
+            if self.game.getGameEnded(board, 1) > 0:
+                res = str(1)
+                color = constants.RED
+            elif self.game.getGameEnded(board, 1) < 0:
+                res = str(2)
+                color = constants.YELLOW
+            else:
+                res = 0
+                color = constants.WHITE
+            print("Game over: Turn ", str(it), "Result ", res)
             self.display(board)
+            label = self.game.myfont.render("Player {} wins !".format(res), 1, color)
+            self.game.screen.blit(label, (20,8))
+            pygame.display.update()
+            pygame.time.wait(2200)
+
         return self.game.getGameEnded(board, 1)
 
     def playGames(self, num, verbose=False):
