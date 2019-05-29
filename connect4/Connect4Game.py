@@ -5,6 +5,7 @@ sys.path.append('..')
 from Game import Game
 from .Connect4Logic import Board
 
+import pygame
 
 class Connect4Game(Game):
     """
@@ -61,6 +62,9 @@ class Connect4Game(Game):
 
     def stringRepresentation(self, board):
         return str(self._base_board.with_np_pieces(np_pieces=board))
+
+    
+
 
 
 def display(board):
