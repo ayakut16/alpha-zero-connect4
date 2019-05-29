@@ -29,9 +29,9 @@ class Arena():
         self.player1 = player1
         self.player2 = player2
         self.game = game
-        #self.display = display
-        self.display = self.display_pygame
-        self.initPygame()
+        self.display = display
+        #self.display = self.display_pygame
+        #self.initPygame()
     def playGame(self, verbose=False):
         """
         Executes one episode of a game.
