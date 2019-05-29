@@ -18,11 +18,15 @@ class RandomPlayer():
 class HumanConnect4Player():
     def __init__(self, game):
         self.game = game
-
+        self.color = constants.RED
     def play(self, board):
         valid_moves = self.game.getValidMoves(board, 1)
         print('\nMoves:', [i for (i, valid) in enumerate(valid_moves) if valid])
         flag = False
+        if board.sum() == -1:
+            self.color = constants.YELLOW
+        elif board.sum() == 0:
+            self.color = constants.RED
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -31,7 +35,7 @@ class HumanConnect4Player():
                 if event.type == pygame.MOUSEMOTION:
                     pygame.draw.rect(self.game.screen, constants.BLACK, (0,0,self.game.width_px,constants.SQUARE_SIZE))
                     posx = event.pos[0]
-                    pygame.draw.circle(self.game.screen, constants.YELLOW, (posx,int(constants.SQUARE_SIZE/2)), constants.RADIUS)
+                    pygame.draw.circle(self.game.screen, self.color, (posx,int(constants.SQUARE_SIZE/2)), constants.RADIUS)
                     pygame.display.update()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pygame.draw.rect(self.game.screen, constants.BLACK, (0,0, self.game.width_px, constants.SQUARE_SIZE))
