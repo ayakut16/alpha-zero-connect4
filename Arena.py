@@ -1,7 +1,16 @@
 import numpy as np
 from pytorch_classification.utils import Bar, AverageMeter
 import time
+from connect4.Connect4Constants import Connect4Constants as constants
+import pygame
 
+BLUE = (0,0,255)
+RED = (220,20,60)
+YELLOW = (255,255,0)
+WHITE = (255,255,255)
+BLACK = (0,0,0)
+P1_PIECE = 1
+P2_PIECE = -1
 class Arena():
     """
     An Arena class where any 2 agents can be pit against each other.
@@ -22,7 +31,8 @@ class Arena():
         self.player2 = player2
         self.game = game
         self.display = display
-
+        #self.display = self.display_pygame
+        #self.initPygame()
     def playGame(self, verbose=False):
         """
         Executes one episode of a game.
@@ -36,6 +46,7 @@ class Arena():
         players = [self.player2, None, self.player1]
         curPlayer = 1
         board = self.game.getInitBoard()
+
         it = 0
         while self.game.getGameEnded(board, curPlayer)==0:
             it+=1
@@ -53,8 +64,22 @@ class Arena():
             board, curPlayer = self.game.getNextState(board, curPlayer, action)
         if verbose:
             assert(self.display)
-            print("Game over: Turn ", str(it), "Result ", str(self.game.getGameEnded(board, 1)))
+            if self.game.getGameEnded(board, 1) > 0:
+                res = str(1)
+                color = constants.RED
+            elif self.game.getGameEnded(board, 1) < 0:
+                res = str(2)
+                color = constants.YELLOW
+            else:
+                res = 0
+                color = constants.WHITE
+            print("Game over: Turn ", str(it), "Result ", res)
             self.display(board)
+            label = self.game.myfont.render("Player {} wins !".format(res), 1, color)
+            self.game.screen.blit(label, (20,8))
+            pygame.display.update()
+            pygame.time.wait(2200)
+
         return self.game.getGameEnded(board, 1)
 
     def playGames(self, num, verbose=False):
@@ -114,3 +139,35 @@ class Arena():
         bar.finish()
 
         return oneWon, twoWon, draws
+    def initPygame(self):
+        # define constants 
+        self.SQUARE_SIZE = 60 # pixels
+        shape = self.game.getBoardSize()
+        self.row = shape[0]
+        self.column = shape[1]
+        self.width_px = self.column * self.SQUARE_SIZE
+        self.height_px = (self.row+1) * self.SQUARE_SIZE
+        size = (self.width_px,self.height_px)
+
+        self.RADIUS = int(self.SQUARE_SIZE*9/20)
+
+        pygame.init()
+        self.screen = pygame.display.set_mode(size)
+        pygame.font.init()
+        self.myfont = pygame.font.SysFont('monospace', 50)
+    
+    def display_pygame(self,board):
+        board = np.flip(board, 0)
+        sqsz = self.SQUARE_SIZE
+        for c in range(self.column):
+            for r in range(self.row):
+                pygame.draw.rect(self.screen, BLUE, (c*sqsz, r*sqsz+sqsz, sqsz, sqsz))
+                pygame.draw.circle(self.screen, BLACK, (int(c*sqsz+sqsz/2), int(r*sqsz+sqsz+sqsz/2)), self.RADIUS)
+
+        for c in range(self.column):
+            for r in range(self.row):
+                if board[r][c] == P1_PIECE:
+                    pygame.draw.circle(self.screen, RED, (int(c*sqsz+sqsz/2), self.height_px-int(r*sqsz+sqsz/2)), self.RADIUS)
+                elif board[r][c] == P2_PIECE: 
+                    pygame.draw.circle(self.screen, YELLOW, (int(c*sqsz+sqsz/2), self.height_px-int(r*sqsz+sqsz/2)), self.RADIUS)
+        pygame.display.update()

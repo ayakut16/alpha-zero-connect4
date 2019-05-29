@@ -1,7 +1,9 @@
 import numpy as np
 import math
 import random
-
+import sys
+import pygame
+from .Connect4Constants import Connect4Constants as constants
 
 class RandomPlayer():
     def __init__(self, game):
@@ -18,18 +20,33 @@ class RandomPlayer():
 class HumanConnect4Player():
     def __init__(self, game):
         self.game = game
-
+        self.color = constants.RED
     def play(self, board):
         valid_moves = self.game.getValidMoves(board, 1)
-        print('\nMoves:', [i for (i, valid)
-                           in enumerate(valid_moves) if valid])
-
+        print('\nMoves:', [i for (i, valid) in enumerate(valid_moves) if valid])
+        flag = False
+        if board.sum() == -1:
+            self.color = constants.YELLOW
+        elif board.sum() == 0:
+            self.color = constants.RED
         while True:
-            move = int(input())
-            if valid_moves[move]:
-                break
-            else:
-                print('Invalid move')
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEMOTION:
+                    pygame.draw.rect(self.game.screen, constants.BLACK, (0,0,self.game.width_px,constants.SQUARE_SIZE))
+                    posx = event.pos[0]
+                    pygame.draw.circle(self.game.screen, self.color, (posx,int(constants.SQUARE_SIZE/2)), constants.RADIUS)
+                    pygame.display.update()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    pygame.draw.rect(self.game.screen, constants.BLACK, (0,0, self.game.width_px, constants.SQUARE_SIZE))
+                    posx = event.pos[0]
+                    move = int( math.floor( posx / constants.SQUARE_SIZE ) )
+                    if valid_moves[move]:
+                        flag = True
+                        break
+            if flag: break
         return move
 
 
