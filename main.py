@@ -1,7 +1,7 @@
 from Coach import Coach
 from connect4.Connect4Game import Connect4Game
 from connect4.tensorflow.NNet import NNetWrapper as nn
-from utils import dotdict
+from utils import dotdict   
 
 args = dotdict({
     'numIters': 1000,
@@ -14,8 +14,8 @@ args = dotdict({
     'cpuct': 1,
 
     'checkpoint': './temp/',
-    'load_model': False,
-    'load_folder_file': ('/dev/models/8x100x50','best.pth.tar'),
+    'load_model': True,
+    'load_folder_file': ('./connect4/tensorflow','best.pth.tar'),
     'numItersForTrainExamplesHistory': 20,
 
 })
