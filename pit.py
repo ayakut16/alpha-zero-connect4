@@ -1,8 +1,9 @@
 import Arena
 from MCTS import MCTS
-from othello.OthelloGame import OthelloGame, display
-from othello.OthelloPlayers import *
-from othello.pytorch.NNet import NNetWrapper as NNet
+from connect4.Connect4Players import *
+from connect4.Connect4Game import Connect4Game, display
+from connect4.tensorflow.NNet import NNetWrapper as nn
+
 
 import numpy as np
 from utils import *
@@ -12,17 +13,17 @@ use this script to play any two agents against each other, or play manually with
 any agent.
 """
 
-g = OthelloGame(6)
+g = Connect4Game()
 
 # all players
 rp = RandomPlayer(g).play
-gp = GreedyOthelloPlayer(g).play
-hp = HumanOthelloPlayer(g).play
+op = OneStepLookaheadConnect4Player(g).play
+hp = HumanConnect4Player(g).play
 
 # nnet players
-n1 = NNet(g)
-n1.load_checkpoint('./pretrained_models/othello/pytorch/','6x100x25_best.pth.tar')
-args1 = dotdict({'numMCTSSims': 50, 'cpuct':1.0})
+n1 = nn(g)
+n1.load_checkpoint('./temp','best.pth.tar')
+args1 = dotdict({'numMCTSSims': 25, 'cpuct':1.0})
 mcts1 = MCTS(g, n1, args1)
 n1p = lambda x: np.argmax(mcts1.getActionProb(x, temp=0))
 
@@ -34,4 +35,4 @@ n1p = lambda x: np.argmax(mcts1.getActionProb(x, temp=0))
 #n2p = lambda x: np.argmax(mcts2.getActionProb(x, temp=0))
 
 arena = Arena.Arena(n1p, hp, g, display=display)
-print(arena.playGames(2, verbose=True))
+print(arena.playGames(10, verbose=True))
