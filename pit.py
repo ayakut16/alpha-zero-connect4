@@ -19,13 +19,14 @@ g = Connect4Game()
 rp = RandomPlayer(g).play
 op = OneStepLookaheadConnect4Player(g).play
 hp = HumanConnect4Player(g).play
+mnp = MinimaxConnect4Player(g).play
 
 # nnet players
-n1 = nn(g)
-n1.load_checkpoint('./temp','best.pth.tar')
-args1 = dotdict({'numMCTSSims': 25, 'cpuct':1.0})
-mcts1 = MCTS(g, n1, args1)
-n1p = lambda x: np.argmax(mcts1.getActionProb(x, temp=0))
+# n1 = nn(g)
+# n1.load_checkpoint('./model','best.pth.tar')
+# args1 = dotdict({'numMCTSSims': 25, 'cpuct':1.0})
+# mcts1 = MCTS(g, n1, args1)
+# n1p = lambda x: np.argmax(mcts1.getActionProb(x, temp=0))
 
 
 #n2 = NNet(g)
@@ -34,5 +35,5 @@ n1p = lambda x: np.argmax(mcts1.getActionProb(x, temp=0))
 #mcts2 = MCTS(g, n2, args2)
 #n2p = lambda x: np.argmax(mcts2.getActionProb(x, temp=0))
 
-arena = Arena.Arena(n1p, hp, g, display=display)
-print(arena.playGames(10, verbose=True))
+arena = Arena.Arena(mnp, hp, g, display=display)
+print(arena.playGames(2, verbose=True))

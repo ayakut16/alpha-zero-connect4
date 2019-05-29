@@ -29,7 +29,8 @@ class Board():
         "Create copy of board containing new stone."
         available_idx, = np.where(self.np_pieces[:, column] == 0)
         if len(available_idx) == 0:
-            raise ValueError("Can't play column %s on board %s" % (column, self))
+            raise ValueError("Can't play column %s on board %s" %
+                             (column, self))
 
         self.np_pieces[available_idx[-1]][column] = player
 
@@ -43,7 +44,7 @@ class Board():
             # Check rows & columns for win
             if (self._is_straight_winner(player_pieces) or
                 self._is_straight_winner(player_pieces.transpose()) or
-                self._is_diagonal_winner(player_pieces)):
+                    self._is_diagonal_winner(player_pieces)):
                 return WinState(True, -player)
 
         # draw has very little value.
@@ -52,6 +53,9 @@ class Board():
 
         # Game is not ended yet.
         return WinState(False, None)
+
+    def get_np_pieces(self, np_pieces):
+        return self.np_pieces
 
     def with_np_pieces(self, np_pieces):
         """Create copy of board with specified pieces."""
