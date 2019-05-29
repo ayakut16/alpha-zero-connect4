@@ -5,16 +5,16 @@ from utils import dotdict
 
 args = dotdict({
     'numIters': 1000,
-    'numEps': 100,
+    'numEps': 20,
     'tempThreshold': 15,
-    'updateThreshold': 0.6,
+    'updateThreshold': 0.51,
     'maxlenOfQueue': 200000,
     'numMCTSSims': 25,
-    'arenaCompare': 40,
+    'arenaCompare': 10,
     'cpuct': 1,
 
     'checkpoint': './temp/',
-    'load_model': True,
+    'load_model': False,
     'load_folder_file': ('./connect4/tensorflow','best.pth.tar'),
     'numItersForTrainExamplesHistory': 20,
 
