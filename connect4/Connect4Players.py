@@ -207,6 +207,6 @@ class MinimaxConnect4Player():
 
     def play(self, board):
         self.game.clear_top_pygame()
-
         s, t = self.minimax(board, self.depth, -math.inf, math.inf, True)
+        #print('I am minimax.')
         return s
